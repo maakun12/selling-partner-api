@@ -7,10 +7,12 @@ import (
 )
 
 func main() {
-	c, err := spapi.NewClient(&spapi.Credential{
+	c, err := spapi.NewClient(&spapi.Config{
 		RefreshToken: "<RefreshToken>",
 		ClientID:     "<ClientID>",
 		ClientSecret: "<ClientSecret>",
+		AccessKey:    "<AccessKey>",
+		SecretKey:    "<SecretKey>",
 	})
 	if err != nil {
 		panic(err)
