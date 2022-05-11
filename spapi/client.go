@@ -13,23 +13,21 @@ import (
 )
 
 const (
+	ContentType               = "application/json"
 	ServiceName               = "execute-api"
 	APIEndpointAuthToken      = "https://api.amazon.com/auth/o2/token"
 	APIEndpointGetCatalogItem = "https://%s/catalog/v0/items/%s"
 )
 
 type Config struct {
-	ClientID     string
-	ClientSecret string
-	RefreshToken string
-	AccessKey    string
-	SecretKey    string
-	// see https://developer-docs.amazon.com/amazon-shipping/docs/sp-api-endpoints
-	Endpoint string
-	// see https://developer-docs.amazon.com/sp-api/docs/marketplace-ids
-	MarketplaceId string
-	// see https://developer-docs.amazon.com/amazon-shipping/docs/sp-api-endpoints
-	Region string
+	ClientID      string
+	ClientSecret  string
+	RefreshToken  string
+	AccessKey     string
+	SecretKey     string
+	Endpoint      string // see https://developer-docs.amazon.com/amazon-shipping/docs/sp-api-endpoints
+	MarketplaceId string // see https://developer-docs.amazon.com/sp-api/docs/marketplace-ids
+	Region        string // see https://developer-docs.amazon.com/amazon-shipping/docs/sp-api-endpoints
 }
 
 type Client struct {
@@ -41,49 +39,50 @@ type Client struct {
 	ServiceName       string
 }
 
-type AuthTokenResponse struct {
+type AccessTokenResponse struct {
 	AccessToken string `json:"access_token"`
 	ExpiresIn   int    `json:"expires_in"`
 }
 
 func NewClient(c *Config) (*Client, error) {
-	client := &Client{Config: c}
-	if err := client.AuthToken(); err != nil {
+	tokenResp, err := GetAccessToken(c)
+	if err != nil {
 		return nil, err
 	}
 
+	client := &Client{Config: c}
+	client.AccessToken = tokenResp.AccessToken
+	client.AccessTokenExpire = time.Now().Add(time.Duration(tokenResp.ExpiresIn) * time.Second)
+
 	client.Credentials = credentials.NewStaticCredentials(c.AccessKey, c.SecretKey, "")
+
 	return client, nil
 }
 
-func (c *Client) AuthToken() error {
+func GetAccessToken(c *Config) (*AccessTokenResponse, error) {
 	req, _ := json.Marshal(map[string]string{
 		"grant_type":    "refresh_token",
-		"refresh_token": c.Config.RefreshToken,
-		"client_id":     c.Config.ClientID,
-		"client_secret": c.Config.ClientSecret,
+		"refresh_token": c.RefreshToken,
+		"client_id":     c.ClientID,
+		"client_secret": c.ClientSecret,
 	})
-
-	res, err := http.Post(APIEndpointAuthToken, "application/json", bytes.NewBuffer(req))
+	resp, err := http.Post(APIEndpointAuthToken, ContentType, bytes.NewBuffer(req))
 	if err != nil {
-		return err
+		return nil, err
 	}
-	defer res.Body.Close()
+	defer resp.Body.Close()
 
-	bodyByte, err := ioutil.ReadAll(res.Body)
+	bodyByte, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	authTokenResponse := &AuthTokenResponse{}
-	if err = json.Unmarshal(bodyByte, authTokenResponse); err != nil {
-		return err
+	res := &AccessTokenResponse{}
+	if err = json.Unmarshal(bodyByte, res); err != nil {
+		return nil, err
 	}
 
-	c.AccessToken = authTokenResponse.AccessToken
-	c.AccessTokenExpire = time.Now().Add(time.Duration(authTokenResponse.ExpiresIn) * time.Second)
-
-	return nil
+	return res, nil
 }
 
 func (c *Client) do(req *http.Request) (*http.Response, error) {
