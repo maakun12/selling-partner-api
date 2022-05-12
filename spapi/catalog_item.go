@@ -32,6 +32,10 @@ func (c *Client) GetCatalogItem(ctx context.Context, asin string) (*types.GetCat
 		return nil, err
 	}
 
+	if resp.StatusCode >= 400 {
+		return nil, fmt.Errorf("request failed. StatusCode=%v, Body=%v", resp.StatusCode, string(byteArray))
+	}
+
 	res := &types.GetCatalogItemResponse{}
 	if err = json.Unmarshal(byteArray, res); err != nil {
 		return nil, err
