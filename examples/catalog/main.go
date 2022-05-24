@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"flag"
 	"fmt"
 	"os"
 
@@ -9,6 +10,9 @@ import (
 )
 
 func main() {
+	mode := flag.String("mode", "GetCatalogItem", "[GetCatalogItem|ListCatalogItem]")
+	flag.Parse()
+
 	c, err := spapi.NewClient(
 		&spapi.Config{
 			RefreshToken:  os.Getenv("LWA_REFRESH_TOKEN"),
@@ -25,10 +29,18 @@ func main() {
 		panic(err)
 	}
 
-	res, err := c.GetCatalogItem(context.Background(), "B092J9FZL2")
-	if err != nil {
-		panic(err)
+	switch *mode {
+	case "GetCatalogItem":
+		res, err := c.GetCatalogItem(context.Background(), "B092J9FZL2")
+		if err != nil {
+			panic(err)
+		}
+		fmt.Println(res)
+	case "ListCatalogItem":
+		res, err := c.ListCatalogItem(context.Background(), "Nintendo Switch")
+		if err != nil {
+			panic(err)
+		}
+		fmt.Println(res)
 	}
-
-	fmt.Println(res)
 }

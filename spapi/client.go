@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
-	"net/url"
 	"time"
 
 	"github.com/aws/aws-sdk-go/aws/credentials"
@@ -13,10 +12,11 @@ import (
 )
 
 const (
-	ContentType               = "application/json"
-	ServiceName               = "execute-api"
-	APIEndpointAuthToken      = "https://api.amazon.com/auth/o2/token"
-	APIEndpointGetCatalogItem = "https://%s/catalog/v0/items/%s"
+	ContentType                = "application/json"
+	ServiceName                = "execute-api"
+	APIEndpointAuthToken       = "https://api.amazon.com/auth/o2/token"
+	APIEndpointGetCatalogItem  = "https://%s/catalog/v0/items/%s"
+	APIEndpointListCatalogItem = "https://%s/catalog/v0/items"
 )
 
 type Config struct {
@@ -86,10 +86,6 @@ func GetAccessToken(c *Config) (*AccessTokenResponse, error) {
 }
 
 func (c *Client) do(req *http.Request) (*http.Response, error) {
-	v := url.Values{}
-	v.Add("MarketplaceId", c.Config.MarketplaceId)
-	req.URL.RawQuery = v.Encode()
-
 	req.Header.Add("X-Amz-Access-Token", c.AccessToken)
 
 	signer := v4.NewSigner(c.Credentials)
