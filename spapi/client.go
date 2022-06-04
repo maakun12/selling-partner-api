@@ -12,11 +12,12 @@ import (
 )
 
 const (
-	ContentType                = "application/json"
-	ServiceName                = "execute-api"
-	APIEndpointAuthToken       = "https://api.amazon.com/auth/o2/token"
-	APIEndpointGetCatalogItem  = "https://%s/catalog/v0/items/%s"
-	APIEndpointListCatalogItem = "https://%s/catalog/v0/items"
+	ContentType                             = "application/json"
+	ServiceName                             = "execute-api"
+	APIEndpointAuthToken                    = "https://api.amazon.com/auth/o2/token"
+	APIEndpointGetCatalogItem               = "https://%s/catalog/v0/items/%s"
+	APIEndpointListCatalogItem              = "https://%s/catalog/v0/items"
+	APIEndpointGetMarketplaceParticipations = "https://%s/sellers/v1/marketplaceParticipations"
 )
 
 type Config struct {
