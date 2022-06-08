@@ -23,7 +23,7 @@ func (c *Client) GetCatalogItem(ctx context.Context, asin string) (*types.GetCat
 	}
 
 	v := url.Values{}
-	v.Add("MarketplaceId", c.Config.MarketplaceId)
+	v.Add("MarketplaceId", c.Config.MarketplaceID)
 	req.URL.RawQuery = v.Encode()
 
 	resp, err := c.do(req)
@@ -61,7 +61,7 @@ func (c *Client) ListCatalogItem(ctx context.Context, query string) (*types.List
 	}
 
 	v := url.Values{}
-	v.Add("MarketplaceId", c.Config.MarketplaceId)
+	v.Add("MarketplaceId", c.Config.MarketplaceID)
 	v.Add("Query", query)
 	req.URL.RawQuery = v.Encode()
 

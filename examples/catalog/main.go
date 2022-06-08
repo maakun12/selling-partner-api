@@ -21,7 +21,7 @@ func main() {
 			AccessKey:     os.Getenv("AWS_ACCESS_KEY"),
 			SecretKey:     os.Getenv("AWS_SECRET_KEY"),
 			Endpoint:      "sellingpartnerapi-fe.amazon.com",
-			MarketplaceId: "A1VC38T7YXB528",
+			MarketplaceID: "A1VC38T7YXB528",
 			Region:        "us-west-2",
 		},
 	)

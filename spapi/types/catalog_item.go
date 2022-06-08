@@ -1,7 +1,7 @@
 package types
 
 type MarketplaceASIN struct {
-	MarketplaceID string `json:"MarketplaceId"`
+	MarketplaceID string `json:"MarketplaceID"`
 	Asin          string `json:"ASIN"`
 }
 type Identifiers struct {

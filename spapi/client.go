@@ -27,7 +27,7 @@ type Config struct {
 	AccessKey     string
 	SecretKey     string
 	Endpoint      string // see https://developer-docs.amazon.com/amazon-shipping/docs/sp-api-endpoints
-	MarketplaceId string // see https://developer-docs.amazon.com/sp-api/docs/marketplace-ids
+	MarketplaceID string // see https://developer-docs.amazon.com/sp-api/docs/marketplace-ids
 	Region        string // see https://developer-docs.amazon.com/amazon-shipping/docs/sp-api-endpoints
 }
 
@@ -36,8 +36,6 @@ type Client struct {
 	Credentials       *credentials.Credentials
 	AccessToken       string
 	AccessTokenExpire time.Time
-	Region            string
-	ServiceName       string
 }
 
 type AccessTokenResponse struct {

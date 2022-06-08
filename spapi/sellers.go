@@ -23,7 +23,7 @@ func (c *Client) GetMarketplaceParticipations(ctx context.Context) (*types.GetMa
 	}
 
 	v := url.Values{}
-	v.Add("MarketplaceId", c.Config.MarketplaceId)
+	v.Add("MarketplaceId", c.Config.MarketplaceID)
 	req.URL.RawQuery = v.Encode()
 
 	resp, err := c.do(req)
