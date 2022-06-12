@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"flag"
 	"fmt"
 	"os"
 
@@ -9,6 +10,9 @@ import (
 )
 
 func main() {
+	mode := flag.String("mode", "GetListingsItem", "[GetListingsItem|PutListingsItem]")
+	flag.Parse()
+
 	c, err := spapi.NewClient(
 		&spapi.Config{
 			RefreshToken:  os.Getenv("LWA_REFRESH_TOKEN"),
@@ -25,10 +29,34 @@ func main() {
 		panic(err)
 	}
 
-	res, err := c.GetListingsItem(context.Background(), "example-seller-id", "example-sku")
-	if err != nil {
-		panic(err)
+	switch *mode {
+	case "GetListingsItem":
+		res, err := c.GetListingsItem(context.Background(), "example-seller-id", "example-sku")
+		if err != nil {
+			panic(err)
+		}
+		fmt.Println(res)
+	case "PutListingsItem":
+		body := map[string]interface{}{
+			"productType":  "KEYBOARDS",
+			"requirements": "LISTING",
+			"attributes": map[string]interface{}{
+				"condition_type": []map[string]interface{}{
+					{
+						"value": "new_new",
+					},
+				},
+				"item_name": []map[string]interface{}{
+					{
+						"value": "Sample Item Name",
+					},
+				},
+			},
+		}
+		res, err := c.PutListingsItem(context.Background(), "example-seller-id", "example-sku", body)
+		if err != nil {
+			panic(err)
+		}
+		fmt.Println(res)
 	}
-
-	fmt.Println(res)
 }
