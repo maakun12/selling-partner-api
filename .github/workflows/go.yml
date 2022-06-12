@@ -21,11 +21,5 @@ jobs:
         with:
           go-version: ${{ matrix.go }}
 
-      - name: install golint
-        run: go get golang.org/x/lint/golint
-
       - name: go vet
         run: go vet $(go list ./... | grep -v /examples/)
-
-      - name: run golint
-        run: golint --set_exit_status ./...
