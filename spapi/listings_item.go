@@ -5,7 +5,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/url"
 
@@ -33,7 +33,7 @@ func (c *Client) GetListingsItem(ctx context.Context, sellerID, sku string) (*ty
 	}
 	defer resp.Body.Close()
 
-	byteArray, err := ioutil.ReadAll(resp.Body)
+	byteArray, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
 	}
@@ -76,7 +76,7 @@ func (c *Client) PutListingsItem(ctx context.Context, sellerID, sku string, body
 	}
 	defer resp.Body.Close()
 
-	byteArray, err := ioutil.ReadAll(resp.Body)
+	byteArray, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
 	}

@@ -4,7 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/url"
 
@@ -32,7 +32,7 @@ func (c *Client) GetMarketplaceParticipations(ctx context.Context) (*types.GetMa
 	}
 	defer resp.Body.Close()
 
-	byteArray, err := ioutil.ReadAll(resp.Body)
+	byteArray, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
 	}

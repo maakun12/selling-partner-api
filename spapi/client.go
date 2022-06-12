@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"time"
 
@@ -74,7 +73,7 @@ func GetAccessToken(c *Config) (*AccessTokenResponse, error) {
 	}
 	defer resp.Body.Close()
 
-	bodyByte, err := ioutil.ReadAll(resp.Body)
+	bodyByte, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
 	}
