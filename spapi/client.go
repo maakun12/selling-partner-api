@@ -3,7 +3,7 @@ package spapi
 import (
 	"bytes"
 	"encoding/json"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"time"
 
@@ -18,6 +18,7 @@ const (
 	APIEndpointGetCatalogItem               = "https://%s/catalog/v0/items/%s"
 	APIEndpointListCatalogItem              = "https://%s/catalog/v0/items"
 	APIEndpointGetMarketplaceParticipations = "https://%s/sellers/v1/marketplaceParticipations"
+	APIEndpointListingsItem                 = "https://%s/listings/2021-08-01/items/%s/%s"
 )
 
 type Config struct {
@@ -71,7 +72,7 @@ func GetAccessToken(c *Config) (*AccessTokenResponse, error) {
 	}
 	defer resp.Body.Close()
 
-	bodyByte, err := ioutil.ReadAll(resp.Body)
+	bodyByte, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
 	}
@@ -87,8 +88,19 @@ func GetAccessToken(c *Config) (*AccessTokenResponse, error) {
 func (c *Client) do(req *http.Request) (*http.Response, error) {
 	req.Header.Add("X-Amz-Access-Token", c.AccessToken)
 
+	var body io.ReadSeeker
+	if req.Body != nil {
+		b, err := io.ReadAll(req.Body)
+		if err != nil {
+			return nil, err
+		}
+
+		req.Body = io.NopCloser(bytes.NewReader(b))
+		body = bytes.NewReader(b)
+	}
+
 	signer := v4.NewSigner(c.Credentials)
-	signer.Sign(req, nil, ServiceName, c.Config.Region, time.Now())
+	signer.Sign(req, body, ServiceName, c.Config.Region, time.Now())
 
 	client := &http.Client{}
 	return client.Do(req)
