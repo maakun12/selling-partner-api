@@ -16,7 +16,7 @@ func (c *Client) GetListingsItem(ctx context.Context, sellerID, sku string) (*ty
 	req, err := http.NewRequestWithContext(
 		ctx,
 		http.MethodGet,
-		fmt.Sprintf(APIEndpointGetListingsItem, c.Config.Endpoint, sellerID, sku),
+		fmt.Sprintf(APIEndpointListingsItem, c.Config.Endpoint, sellerID, sku),
 		nil,
 	)
 	if err != nil {
@@ -59,7 +59,7 @@ func (c *Client) PutListingsItem(ctx context.Context, sellerID, sku string, body
 	req, err := http.NewRequestWithContext(
 		ctx,
 		http.MethodPut,
-		fmt.Sprintf(APIEndpointPutListingsItem, c.Config.Endpoint, sellerID, sku),
+		fmt.Sprintf(APIEndpointListingsItem, c.Config.Endpoint, sellerID, sku),
 		bytes.NewBuffer(b),
 	)
 	if err != nil {
@@ -97,7 +97,7 @@ func (c *Client) DeleteListingsItem(ctx context.Context, sellerID, sku string) (
 	req, err := http.NewRequestWithContext(
 		ctx,
 		http.MethodDelete,
-		fmt.Sprintf(APIEndpointGetListingsItem, c.Config.Endpoint, sellerID, sku),
+		fmt.Sprintf(APIEndpointListingsItem, c.Config.Endpoint, sellerID, sku),
 		nil,
 	)
 	if err != nil {

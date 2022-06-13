@@ -18,8 +18,7 @@ const (
 	APIEndpointGetCatalogItem               = "https://%s/catalog/v0/items/%s"
 	APIEndpointListCatalogItem              = "https://%s/catalog/v0/items"
 	APIEndpointGetMarketplaceParticipations = "https://%s/sellers/v1/marketplaceParticipations"
-	APIEndpointGetListingsItem              = "https://%s/listings/2021-08-01/items/%s/%s"
-	APIEndpointPutListingsItem              = "https://%s/listings/2021-08-01/items/%s/%s"
+	APIEndpointListingsItem                 = "https://%s/listings/2021-08-01/items/%s/%s"
 )
 
 type Config struct {
