@@ -10,7 +10,7 @@ import (
 )
 
 func main() {
-	mode := flag.String("mode", "GetListingsItem", "[GetListingsItem|PutListingsItem]")
+	mode := flag.String("mode", "GetListingsItem", "[GetListingsItem|PutListingsItem|DeleteListingsItem]")
 	flag.Parse()
 
 	c, err := spapi.NewClient(
@@ -54,6 +54,12 @@ func main() {
 			},
 		}
 		res, err := c.PutListingsItem(context.Background(), "example-seller-id", "example-sku", body)
+		if err != nil {
+			panic(err)
+		}
+		fmt.Println(res)
+	case "DeleteListingsItem":
+		res, err := c.DeleteListingsItem(context.Background(), "example-seller-id", "example-sku")
 		if err != nil {
 			panic(err)
 		}
