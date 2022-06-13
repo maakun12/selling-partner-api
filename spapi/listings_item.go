@@ -130,3 +130,46 @@ func (c *Client) DeleteListingsItem(ctx context.Context, sellerID, sku string) (
 
 	return res, nil
 }
+
+func (c *Client) PatchListingsItem(ctx context.Context, sellerID, sku string, body map[string]interface{}) (*types.PatchListingsItemResponse, error) {
+	b, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequestWithContext(
+		ctx,
+		http.MethodPatch,
+		fmt.Sprintf(APIEndpointListingsItem, c.Config.Endpoint, sellerID, sku),
+		bytes.NewBuffer(b),
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	v := url.Values{}
+	v.Add("marketplaceIds", c.Config.MarketplaceID)
+	req.URL.RawQuery = v.Encode()
+
+	resp, err := c.do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	byteArray, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	if resp.StatusCode >= 400 {
+		return nil, fmt.Errorf("request failed. StatusCode=%v, Body=%v", resp.StatusCode, string(byteArray))
+	}
+
+	res := &types.PatchListingsItemResponse{}
+	if err = json.Unmarshal(byteArray, res); err != nil {
+		return nil, err
+	}
+
+	return res, nil
+}
